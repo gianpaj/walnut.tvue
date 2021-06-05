@@ -8,6 +8,7 @@
 import './assets/all.css'
 import NavBar from './components/NavBar.vue'
 import Main from './components/Main.vue'
+import reddit from 'reddit.js'
 
 export default {
   name: 'App',
