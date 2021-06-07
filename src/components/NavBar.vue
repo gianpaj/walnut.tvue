@@ -20,26 +20,27 @@
               <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav">
                   <li v-for="item in channels" :key="item.id" :class="{ 'active': item.title == channel && !searchInput }">
-                    <a v-on:click="changeChannel(item.title)"> {{ item.title }} </a>
+                    <a @click="changeChannel(item.title)"> {{ item.title }} </a>
                   </li>
                   
                 </ul>
               </div>
             </div>
+            
             <div class="hide-mobile-portrait mobile-navbar-portrait">
               <ul class="nav navbar-nav">
                 <li v-for="item in channels" :key="item.title" :class="{ 'active': item.title == channel && !searchInput }">
-                  <a v-on:click="changeChannel(item.title)"> {{ item.title }} </a>
+                  <a @click="changeChannel(item.title)"> {{ item.title }} </a>
                 </li>
               </ul>
-              <form class="hide-mobile-portrait navbar-form" v-on:submit="onSubmit($event)">
+              <form class="hide-mobile-portrait navbar-form" @submit="onSubmit($event)">
                 <div class="form-group">
                   <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                  <v-select
+                  <!--<v-select
                     placeholder="search"
                     label="title"
-                    :on-search="onSearch"
-                    :on-change="onChange"
+                    @search="onSearch"
+                    @input="onChange"
                     :options="options"
                     v-model:value="searchInput"
                   >
@@ -50,7 +51,7 @@
                     <template v-slot:no-options>
                       <slot name="no-options"></slot>
                     </template>
-                  </v-select>
+                  </v-select>-->
                 </div>
               </form>
             </div>
@@ -61,40 +62,36 @@
 
 <script>
 import '../assets/all.css'
-import {ref} from 'vue'
+import $ from 'jquery'
+//import {ref} from 'vue'
 
 export default {
     name: 'NavBar',
-    setup() {
-      const channels = ref([
-        {
-          title: 'general',
-          subreddit: 'videos',
-          minNumOfVotes: 100,
-          // youtubeChannels: 'UCsvn_Po0SmunchJYOWpOxMg;UCzQUP1qoWDoEbmsQxvdjxgQ',
-        },
-        {
-          title: 'curious',
-          subreddit: 'curiousvideos;mealtimevideos;educativevideos;watchandlearn',
-          minNumOfVotes: 3,
-          youtubeChannels:
-            'UCzQUP1qoWDoEbmsQxvdjxgQ;UCDsElQQt_gCZ9LgnW-7v-cQ;UCX6b17PVsYBQ0ip5gyeme-Q;UCmmPgObSUPw1HL2lq6H4ffA;UC7IcJI8PUf5Z3zKxnZvTBog;UCZYTClx2T1of7BRZ86-8fow;UC9uD-W5zQHQuAVT2GdcLCvg',
-        },
-        {
-          title: 'science',
-          subreddit: 'biology;psychology;lectures;space;philosophy;physics;math',
-          minNumOfVotes: 3,
-        },
-        {
-          title: 'documentaries',
-          subreddit: 'documentaries',
-          minNumOfVotes: 10,
-        },
-      ])
+    props: ['search-input', 'options', 'channel', 'channels'],
+    emits: ['change', 'change-channel'],
+    setup(props, context) {
+      
+      const onSearch = function(value) {
+        // eslint-disable-next-line vue/no-mutating-props
+        props.searchInput = '';
+        // eslint-disable-next-line vue/no-mutating-props
+        props.options = [value + ' (YouTube)', value + ' (Subreddit)'];
+      }
 
-      const channel = ref('General')
+      // eslint-disable-next-line no-unused-vars
+      const onChange = function(value) {
+        // eslint-disable-next-line no-undef
+        console.log('chagement');
+        //emit('change', value);
+      }
 
-      return {channels, channel}        
+      const changeChannel = function(v) {
+        console.log('First stop');
+        $('#navbar-collapse-1').collapse('hide');
+        context.emit('change-channel', v)
+      }
+
+      return {onSearch, onChange, changeChannel}        
     }
 }
 </script>

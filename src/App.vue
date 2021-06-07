@@ -1,6 +1,6 @@
 <template>
-  <NavBar />
-  <Main :reddit-service="redditService" :youtube-service="youtubeService" :mixed="mixElementsFromArraysOfArrays"/>
+  <NavBar @change-channel="changeChannel" :search-input="searchInput" :options="options" :channel="channel" :channels="channels" @change="onChange"/>
+  <Main ref="main" @set-search-input="setSearchInput" @set-channel="setChannel" :channel="channel" :channels="channels" :search-input="searchInput" :reddit-service="redditService" :youtube-service="youtubeService" :mixed="mixElementsFromArraysOfArrays"/>
   <!--<router-view/>-->
 </template>
 
@@ -8,7 +8,8 @@
 import './assets/all.css'
 import NavBar from './components/NavBar.vue'
 import Main from './components/Main.vue'
-import reddit from 'reddit.js'
+import {ref} from 'vue'
+//import SideBar from './components/Sidebar.vue'
 
 export default {
   name: 'App',
@@ -19,7 +20,39 @@ export default {
     const youtubeURL = 'http://www.youtube.com/watch?v=';
     const youtubeURLLength = youtubeURL.length;
     const embedLength = '/embed/'.length;
+    const searchInput = ref(null);
+    const options = ref([]);
+    const main = ref(null);
+    const channels = ref([
+          {
+            title: 'general',
+            subreddit: 'videos',
+            minNumOfVotes: 100,
+            // youtubeChannels: 'UCsvn_Po0SmunchJYOWpOxMg;UCzQUP1qoWDoEbmsQxvdjxgQ',
+          },
+          {
+            title: 'curious',
+            subreddit: 'curiousvideos;mealtimevideos;educativevideos;watchandlearn',
+            minNumOfVotes: 3,
+            youtubeChannels:
+              'UCzQUP1qoWDoEbmsQxvdjxgQ;UCDsElQQt_gCZ9LgnW-7v-cQ;UCX6b17PVsYBQ0ip5gyeme-Q;UCmmPgObSUPw1HL2lq6H4ffA;UC7IcJI8PUf5Z3zKxnZvTBog;UCZYTClx2T1of7BRZ86-8fow;UC9uD-W5zQHQuAVT2GdcLCvg',
+          },
+          {
+            title: 'science',
+            subreddit: 'biology;psychology;lectures;space;philosophy;physics;math',
+            minNumOfVotes: 3,
+          },
+          {
+            title: 'documentaries',
+            subreddit: 'documentaries',
+            minNumOfVotes: 10,
+          },
+        
+        ]);
 
+    
+    var paths = window.location.pathname.split('/').filter(a => a);      
+    const channel = ref(paths.length === 1 && paths[0])
     
     function RedditVideoService() {
       function isVideoObject(obj) {
@@ -99,6 +132,7 @@ export default {
           if (typeof channel !== 'string') {
             return reject(new Error('Bad channel argument value. Channel should be a string'));
           }
+          // eslint-disable-next-line no-undef
           let query = reddit.hot(channel).limit(50);
           if (after) query = query.after(after);
 
@@ -151,7 +185,7 @@ export default {
       };
     }
 
-    function mixElementsFromArraysOfArrays(arrayOfArrays) {
+    const mixElementsFromArraysOfArrays = function (arrayOfArrays) {
       // find the smallest amount of videos for every channel
       const leastAmountOfVids = Math.min.apply(null, arrayOfArrays.map(arr => arr.length).filter(arr => arr));
 
@@ -182,7 +216,7 @@ export default {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const redditService = RedditVideoService();
+    const redditService = ref(RedditVideoService());
 
     function YouTubeService() {
       function search(query) {
@@ -235,12 +269,31 @@ export default {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const youtubeService = YouTubeService();
+    const youtubeService = ref(YouTubeService());
+
+    const onChange = function(value) {
+        if (value) main.value.search(value);
+      }
+
+    const setChannel = function(v) {
+      channel.value = v;
+    }
+
+    const setSearchInput = function(v) {
+      searchInput.value = v;
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    const changeChannel = function(v) {
+      main.value.changeChannel(v);
+    }
 
     var tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    return {changeChannel, main, setSearchInput, setChannel, redditService, youtubeService, mixElementsFromArraysOfArrays, searchInput, options, onChange, channel, channels}
 
     
     
