@@ -1,9 +1,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import vSelect from "vue-select";
 
 // eslint-disable-next-line no-undef
-createApp(App).use(router).component('v-select', VueSelect.VueSelect).mount('#app') /*.config.unsafeDelimiters = ['{!!', '!!}'].config.debug = false
+//console.log(VueSelect.VueSelect);
+createApp(App).use(router).component('v-select', vSelect).mount('#app'); /*.config.unsafeDelimiters = ['{!!', '!!}'].config.debug = false
     .component('v-select', VueSelect.VueSelect)
     .filter('maxChar', function(t) {
       var e = t;

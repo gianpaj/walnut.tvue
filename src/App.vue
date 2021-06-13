@@ -9,7 +9,7 @@ import './assets/all.css'
 import NavBar from './components/NavBar.vue'
 import Main from './components/Main.vue'
 import {ref} from 'vue'
-//import SideBar from './components/Sidebar.vue'
+import searchYoutube from 'youtube-api-v3-search';
 
 export default {
   name: 'App',
@@ -20,7 +20,7 @@ export default {
     const youtubeURL = 'http://www.youtube.com/watch?v=';
     const youtubeURLLength = youtubeURL.length;
     const embedLength = '/embed/'.length;
-    const searchInput = ref(null);
+    const searchInput = ref('');
     const options = ref([]);
     const main = ref(null);
     const channels = ref([
@@ -51,8 +51,10 @@ export default {
         ]);
 
     
+     // eslint-disable-next-line no-unused-vars
     var paths = window.location.pathname.split('/').filter(a => a);      
-    const channel = ref(paths.length === 1 && paths[0])
+    //const channel = ref(paths.length === 1 && paths[0])
+    const channel = ref('general')
     
     function RedditVideoService() {
       function isVideoObject(obj) {

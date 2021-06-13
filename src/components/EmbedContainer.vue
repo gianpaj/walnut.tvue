@@ -3,6 +3,8 @@
       <div class="videoPlayer">
         <YouTube 
         :src="link" 
+        :width="width"
+        :height="height"
         @ready="onPlayerReady"
         @state-chage="onPlayerStateChange"
         @error="onPlayerError"
@@ -44,16 +46,12 @@ export default {
       return `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`;
     });
 
-    //const link = ref('')
-    //console.log(link.value)
     const test = function() {
       // eslint-disable-next-line no-undef
       console.log(link.value);
     }
     onMounted(() => {     
       //link.value = `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`;
-      console.log(link.value);
-
     });
     // eslint-disable-next-line no-unused-vars
     const videoId = ref(props.playingVideo.youtubeId)
