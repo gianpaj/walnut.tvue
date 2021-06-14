@@ -32,7 +32,7 @@
               <a @click="changeChannel(item.title)"> {{ item.title }} </a>
             </li>
           </ul>
-          <!--<form class="hide-mobile-portrait navbar-form" @submit="onSubmit($event)"><div class="form-group">
+          <form class="hide-mobile-portrait navbar-form" @submit="onSubmit($event)"><div class="form-group">
                   <span class="glyphicon glyphicon-search form-control-feedback"></span>
                   <v-select
                     placeholder="search"
@@ -42,16 +42,16 @@
                     :options="options"
                     v-model:value="searchInput"
                   >
-                    <template slot="option" slot-scope="option">
+                    <!--<template slot="option" slot-scope="option">
                       <span class="fa-youtube"></span>
                       {{ option }}
                     </template>
                     <template slot="no-options">
                       <slot name="no-options"></slot>
-                    </template>
+                    </template>-->
                   </v-select>
                 </div>
-          </form>-->
+          </form>
         </div>
       </div>
     </div>

@@ -16,14 +16,30 @@
 <script>
 
 import {onMounted} from 'vue';
+//import $ from 'jquery'
 
 export default {
-  props: ['playing-video'],
-  setup() {
+  props: ['playing-video', 'channel'],
+  setup(props) {
     onMounted(() => {
 
     });
-       
+
+    const share = function(video) {
+        let url;
+        if (props.channel && props.playingVideo.permalink.includes('reddit.com')) {
+          url = `https://walnut.tv/${props.channel}/${video.id}`;
+        } else {
+          // YouTube
+          url = props.playingVideo.permalink;
+        }
+
+        // eslint-disable-next-line no-undef
+        $('#shareModal').modal('show');
+        // eslint-disable-next-line no-undef
+        $('#url-text')[0].value = url;
+      }
+       return {share}
   },
 }
 </script>

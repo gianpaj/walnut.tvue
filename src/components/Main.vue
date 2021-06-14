@@ -1,12 +1,13 @@
 <template>
   <div v-if="!loadingVideos">
-    <div class="main-content">
-      <div class="container">
+    <div class="container">
       <SideBar @play="play" :video-playing="videoPlaying" :mobile="mobile" :video-list="videoList" :videos-watched="videosWatched"/>
+      
+      <div class="main-content">
           
       <div id="video-container" class="video-container pre-scrollable">      
           <EmbedContainer @play="play" :playing-video="playingVideo" @next="nextVideo" :video-message="videoMessage" ref="youtube" :video-list="videoList" :autoplay="autoplay" :index="indexToPlay"/>
-          <Details :playing-video="playingVideo"/>      
+          <Details :playing-video="playingVideo" :channel="channel"/>      
           <div class="terms-container">
             <a class="terms" target="_black" href="https://www.youtube.com/t/terms">YouTube ToS</a> &nbsp;
             <a class="terms" target="_black" href="https://policies.google.com/privacy">Google Privacy Policy</a>
@@ -307,19 +308,7 @@ export default {
           localStorage.setItem('videosWatched', t);
         }
       }
-      // eslint-disable-next-line no-unused-vars
-      const share = function(video) {
-        var url;
-        if (props.channel && playingVideo.value.permalink.includes('reddit.com')) {
-          url = `https://walnut.tv/${props.channel}/${video.id}`;
-        } else {
-          // YouTube
-          url = playingVideo.value.permalink;
-        }
-        $('#shareModal').modal('show');
-        // put text into #url-text
-        $('#url-text')[0].value = url;
-      }
+      
       // eslint-disable-next-line no-unused-vars
       const storageAvailable = function() {
         try {
