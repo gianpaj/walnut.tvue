@@ -6,6 +6,7 @@
 
 <script>
 import './assets/all.css'
+import 'vue-next-select/dist/index.css';
 import NavBar from './components/NavBar.vue'
 import Main from './components/Main.vue'
 import {ref} from 'vue'

@@ -34,7 +34,7 @@
           </ul>
           <form class="hide-mobile-portrait navbar-form" @submit="onSubmit($event)"><div class="form-group">
                   <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                  <v-select
+                  <vue-select
                     placeholder="search"
                     label="title"
                     @search="onSearch"
@@ -49,7 +49,7 @@
                     <template slot="no-options">
                       <slot name="no-options"></slot>
                     </template>-->
-                  </v-select>
+                  </vue-select>
                 </div>
           </form>
         </div>
