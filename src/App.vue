@@ -1,5 +1,5 @@
 <template>
-  <NavBar @change-channel="changeChannel" :search-input="searchInput" :options="options" :channel="channel" :channels="channels" @change="onChange"/>
+  <NavBar @change-channel="changeChannel" :channel="channel" :channels="channels" @change="onChange"/>
   <Main ref="main" @set-search-input="setSearchInput" @set-channel="setChannel" :channel="channel" :channels="channels" :search-input="searchInput" :reddit-service="redditService" :youtube-service="youtubeService" :mixed="mixElementsFromArraysOfArrays"/>
   <!--<router-view/>-->
 </template>
@@ -15,14 +15,13 @@ import searchYoutube from 'youtube-api-v3-search';
 export default {
   name: 'App',
   components: {NavBar, Main},
-  setup() {    
+  setup() {
 
     const youtubeApiKey = 'AIzaSyD342vuWxFeyEMKANx58qKyECeNsxlv0f8';
     const youtubeURL = 'http://www.youtube.com/watch?v=';
     const youtubeURLLength = youtubeURL.length;
     const embedLength = '/embed/'.length;
     const searchInput = ref('');
-    const options = ref([]);
     const main = ref(null);
     const channels = ref([
           {
@@ -48,15 +47,14 @@ export default {
             subreddit: 'documentaries',
             minNumOfVotes: 10,
           },
-        
+
         ]);
 
-    
+
      // eslint-disable-next-line no-unused-vars
-    var paths = window.location.pathname.split('/').filter(a => a);      
+    var paths = window.location.pathname.split('/').filter(a => a);
     //const channel = ref(paths.length === 1 && paths[0])
     const channel = ref('general')
-    
     function RedditVideoService() {
       function isVideoObject(obj) {
         var data = obj.data;
@@ -296,10 +294,8 @@ export default {
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    return {changeChannel, main, setSearchInput, setChannel, redditService, youtubeService, mixElementsFromArraysOfArrays, searchInput, options, onChange, channel, channels}
+    return {changeChannel, main, setSearchInput, setChannel, redditService, youtubeService, mixElementsFromArraysOfArrays, searchInput, onChange, channel, channels}
 
-    
-    
 /*
     Vue.config.unsafeDelimiters = ['{!!', '!!}'];
     Vue.config.debug = false;

@@ -1,6 +1,6 @@
 <template>
 
-<div class="navbar navbar-inverse">
+  <div class="navbar navbar-inverse">
     <div class="header-container">
       <div class="navbar-header">
         <a class="navbar-brand" href="/">
@@ -21,11 +21,11 @@
             <ul class="nav navbar-nav">
               <li v-for="item in channels" :key="item.id" :class="{ 'active': item.title == channel && !searchInput }">
                 <a @click="changeChannel(item.title)"> {{ item.title }} </a>
-              </li>              
+              </li>
             </ul>
           </div>
         </div>
-        
+
         <div class="hide-mobile-portrait mobile-navbar-portrait">
           <ul class="nav navbar-nav">
             <li v-for="item in channels" :key="item.title" :class="{ 'active': item.title == channel && !searchInput }">
@@ -35,13 +35,17 @@
           <form class="hide-mobile-portrait navbar-form" @submit="onSubmit($event)"><div class="form-group">
                   <span class="glyphicon glyphicon-search form-control-feedback"></span>
                   <vue-select
-                    placeholder="search"
+                    search-placeholder="search"
                     label="title"
-                    @search="onSearch"
-                    @input="onChange"
+                    @search:input="onChange"
+                    @selected="onSearch"
                     :options="options"
-                    v-model:value="searchInput"
+                    v-model="searchInput"
+                    searchable
+                    clear-on-select
+                    clear-on-close
                   >
+                  </vue-select>
                     <!--<template slot="option" slot-scope="option">
                       <span class="fa-youtube"></span>
                       {{ option }}
@@ -49,7 +53,6 @@
                     <template slot="no-options">
                       <slot name="no-options"></slot>
                     </template>-->
-                  </vue-select>
                 </div>
           </form>
         </div>
@@ -59,28 +62,32 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import '../assets/all.css'
 //import $ from 'jquery'
 //import {onMounted} from 'vue'
 
 export default {
     name: 'NavBar',
-    props: ['search-input', 'options', 'channel', 'channels'],
+    props: ['search-input', 'channel', 'channels'],
     emits: ['change', 'change-channel'],
     setup(props, context) {
       
+      const options = ref([])
+      const searchInput = ref([])
       const onSearch = function(value) {
-        // eslint-disable-next-line vue/no-mutating-props
-        props.searchInput = '';
-        // eslint-disable-next-line vue/no-mutating-props
-        props.options = [value + ' (YouTube)', value + ' (Subreddit)'];
+        console.log('onSearch', value);
       }
 
-      // eslint-disable-next-line no-unused-vars
-      const onChange = function(value) {
-        // eslint-disable-next-line no-undef
-        console.log('chagement');
-        //emit('change', value);
+      const onChange = function(inputEvent) {
+        // emit('change', value);
+        const {value} = inputEvent.target
+        console.log('chagement', value);
+        if (inputEvent.target.value === '') {
+          options.value = []
+          return
+        }
+        options.value = [value + ' (YouTube)', value + ' (Subreddit)'];
       }
 
       const changeChannel = function(v) {
@@ -88,9 +95,8 @@ export default {
         context.emit('change-channel', v);
       }
 
-      return {onSearch, onChange, changeChannel}        
+      return {onSearch, onChange, options, searchInput, changeChannel}
     }
 }
 </script>
-  
-          
+
