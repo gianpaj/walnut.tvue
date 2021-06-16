@@ -19,7 +19,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li v-for="item in channels" :key="item.id" :class="{ 'active': item.title == channel && !searchInput }">
+              <li v-for="item in channels" :key="item.id" :class="{ 'active': item.title == channel }">
                 <a @click="changeChannel(item.title)"> {{ item.title }} </a>
               </li>
             </ul>
@@ -28,7 +28,7 @@
 
         <div class="hide-mobile-portrait mobile-navbar-portrait">
           <ul class="nav navbar-nav">
-            <li v-for="item in channels" :key="item.title" :class="{ 'active': item.title == channel && !searchInput }">
+            <li v-for="item in channels" :key="item.title" :class="{ 'active': item.title == channel }">
               <a @click="changeChannel(item.title)"> {{ item.title }} </a>
             </li>
           </ul>
