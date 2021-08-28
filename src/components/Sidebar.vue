@@ -17,10 +17,28 @@
 </template>
 
 <script>
+/* eslint-disable vue/prop-name-casing */
 import jQuery from 'jquery';
 
 export default {
-  props: ['video-list', 'mobile', 'video-playing', 'videos-watched'],
+  props: {
+    'video-list': {
+      type: Array,
+      required: true,
+    },
+    mobile: {
+      type: Boolean,
+      required: true,
+    },
+    'video-playing': {
+      type: Number,
+      required: true,
+    },
+    'videos-watched': {
+      type: Array,
+      required: true,
+    },
+  },
   emits: ['play'],
   // eslint-disable-next-line no-unused-vars
   setup(props, context) {
