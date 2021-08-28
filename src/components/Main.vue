@@ -95,7 +95,7 @@ export default {
     const contentType = ref(''); // 'youtube' or 'reddit'
     const loadingVideos = ref(true);
     const mobile = ref(false);
-    const playingVideo = ref([]);
+    const playingVideo = ref({});
     const videoList = ref([]);
     const videoMessage = ref(loadingVideosMessage);
     const videoPlaying = ref(0);
@@ -106,13 +106,13 @@ export default {
     // eslint-disable-next-line no-unused-vars
     const indexToPlay = ref(0);
 
-    //methods
-    const play = function (i) {
+    const play = function (i, player) {
+      console.log('play', i, player);
       playingVideo.value = videoList.value[i];
       videoPlaying.value = i;
       voted.value = 0;
       watched(playingVideo.value.youtubeId);
-      playVideo(playingVideo.value);
+      playVideo(playingVideo.value, player);
       if (!props.channel) return;
       if (playingVideo.value.permalink.includes('reddit.com')) {
         window.history.replaceState(null, null, '/' + props.channel + '/' + playingVideo.value.id);
@@ -276,8 +276,15 @@ export default {
 
     // eslint-disable-next-line no-unused-vars
     const playVideo = function (t, player) {
-      if (!player || !player.loadVideoById) return;
-      this.mobile ? player.cueVideoById(t.youtubeId) : player.loadVideoById(t.youtubeId);
+      console.log('playVideo', t.youtubeId);
+      // eslint-disable-next-line no-debugger
+      // debugger;
+      if (!player || !player.value || !player.value.refloadVideoById) {
+        console.log('not playing');
+        return;
+      }
+      console.log('playing');
+      this.mobile ? player.value.cueVideoById(t.youtubeId) : player.value.loadVideoById(t.youtubeId);
     };
 
     // eslint-disable-next-line no-unused-vars
@@ -300,27 +307,26 @@ export default {
 
     // eslint-disable-next-line no-unused-vars
     const scroll = function (num) {
-      var e = $('#toolbox').scrollTop();
-      var n = $('#toolbox .active').parent().height();
+      const e = $('#toolbox').scrollTop();
+      const n = $('#toolbox .active').parent().height();
       $('#toolbox').scrollTop(e + num === 1 ? n + 1 : -(n + 1));
     };
     // eslint-disable-next-line no-unused-vars
     const getStorage = function () {
       if (storageAvailable() && localStorage.getItem('videosWatched')) {
-        var t = localStorage.getItem('videosWatched');
+        const t = localStorage.getItem('videosWatched');
         videosWatched.value = JSON.parse(t);
       }
     };
     // eslint-disable-next-line no-unused-vars
     const setStorage = function () {
-      console.log('SetStore');
       if (storageAvailable()) {
-        var t = JSON.stringify(videosWatched.value);
+        const t = JSON.stringify(videosWatched.value);
         localStorage.setItem('videosWatched', t);
       }
     };
 
-    // eslint-disable-next-line no-unused-vars
+    // TODO: move to util.js
     const storageAvailable = function () {
       try {
         var n = '__storage_test__';

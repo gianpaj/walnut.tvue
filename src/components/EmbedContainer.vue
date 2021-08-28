@@ -16,45 +16,47 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+/* eslint-disable vue/prop-name-casing */
+import { ref, computed } from 'vue';
 import YouTube from 'vue3-youtube';
 
 export default {
   components: { YouTube },
-  props: ['video-list', 'autoplay', 'index', 'video-message', 'playing-video'],
+  props: {
+    'video-list': {
+      type: Array,
+      required: true,
+    },
+    autoplay: {
+      type: Boolean,
+      required: true,
+    },
+    index: {
+      type: Number,
+      required: true,
+    },
+    'playing-video': {
+      type: Object,
+      required: true,
+    },
+    'video-message': {
+      type: String,
+      required: true,
+    },
+  },
   emits: ['next', 'play'],
   setup(props, context) {
-    //Data
     const height = ref('390');
     const width = ref('640');
     const player = ref();
-    /*const videoId = ref(youtubeId);
-    const events = ref({
-      onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange,
-      onError: onPlayerError,
-    });
-    const playerVars = ref({
-      controls: 1,
-      showinfo: 0,
-      rel: 0,
-      iv_load_policy: 3,
-      origin: 'https://walnut.tv',
-    });*/
+    // const videoId = ref(youtubeId);
     //const link = ref(null);
-    const link = computed(() => {
-      return `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`;
-    });
+    const link = computed(() => `https://www.youtube.com/watch?v=${props.playingVideo.value?.youtubeId}`);
 
-    const test = function () {
-      // eslint-disable-next-line no-undef
-      console.log(link.value);
-    };
-    onMounted(() => {
-      //link.value = `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`;
-    });
+    const test = function () {};
+
     // eslint-disable-next-line no-unused-vars
-    const videoId = ref(props.playingVideo.youtubeId);
+    const videoId = ref(props.playingVideo.value?.youtubeId);
     // eslint-disable-next-line no-unused-vars
     const events = ref({
       onReady: onPlayerReady,
@@ -63,18 +65,22 @@ export default {
     });
     // eslint-disable-next-line no-unused-vars
     const playerVars = ref({
+      // autoplay: 1,
       controls: 1,
       showinfo: 0,
       rel: 0,
+      // video annotations
       iv_load_policy: 3,
-      origin: 'http://localhost:8080',
+      // origin: 'http://localhost:3000',
+      // origin: 'https://walnut.tv',
     });
 
     //Methods
     // eslint-disable-next-line no-unused-vars
-    const play = function (i) {
+    const play = (i) => {
+      console.log('e play', i, player);
       // eslint-disable-next-line no-undef
-      context.emit('play', i);
+      context.emit('play', i, player);
     };
     const nextVideo = function () {
       //watchEffect(() => {
@@ -84,13 +90,20 @@ export default {
     };
 
     function onPlayerReady() {
+      console.log(props.playingVideo.value);
       // if we're playing a specific video (e.g. /general/b97ih5)
-      props.videoList[props.indexToPlay] && play(props.indexToPlay);
+      props.videoList[props.index] && play(props.index, player.value);
+      // console.log('onready', props.index, player);
+      // console.log('onready', props.index, this.$refs.player);
+
+      return true;
     }
     function onPlayerError() {
+      console.log('onPlayerError');
       nextVideo();
     }
     function onPlayerStateChange(t) {
+      console.log('onPlayerStateChange');
       0 === t.data && props.autoplay && nextVideo();
     }
 
@@ -107,6 +120,11 @@ export default {
       play,
       playerVars,
     };
+  },
+
+  mounted() {
+    this.onPlayerReady();
+    //link.value = `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`;
   },
 };
 </script>
