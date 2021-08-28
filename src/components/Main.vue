@@ -352,8 +352,6 @@ export default {
       window.removeEventListener('keyup', keys);
     });
 
-    console.log(videoPlaying.value);
-
     return {
       autoplay,
       contentType,
