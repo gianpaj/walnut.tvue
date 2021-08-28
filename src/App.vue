@@ -1,22 +1,31 @@
 <template>
-  <NavBar @change-channel="changeChannel" :channel="channel" :channels="channels" @change="onChange"/>
-  <Main ref="main" @set-search-input="setSearchInput" @set-channel="setChannel" :channel="channel" :channels="channels" :search-input="searchInput" :reddit-service="redditService" :youtube-service="youtubeService" :mixed="mixElementsFromArraysOfArrays"/>
+  <NavBar @change-channel="changeChannel" :channel="channel" :channels="channels" @change="onChange" />
+  <Main
+    ref="main"
+    @set-search-input="setSearchInput"
+    @set-channel="setChannel"
+    :channel="channel"
+    :channels="channels"
+    :search-input="searchInput"
+    :reddit-service="redditService"
+    :youtube-service="youtubeService"
+    :mixed="mixElementsFromArraysOfArrays"
+  />
   <!--<router-view/>-->
 </template>
 
 <script>
-import './assets/all.css'
+import './assets/all.css';
 import 'vue-next-select/dist/index.css';
-import NavBar from './components/NavBar.vue'
-import Main from './components/Main.vue'
-import {ref} from 'vue'
+import NavBar from './components/NavBar.vue';
+import Main from './components/Main.vue';
+import { ref } from 'vue';
 import searchYoutube from 'youtube-api-v3-search';
 
 export default {
   name: 'App',
-  components: {NavBar, Main},
+  components: { NavBar, Main },
   setup() {
-
     const youtubeApiKey = 'AIzaSyD342vuWxFeyEMKANx58qKyECeNsxlv0f8';
     const youtubeURL = 'http://www.youtube.com/watch?v=';
     const youtubeURLLength = youtubeURL.length;
@@ -24,37 +33,35 @@ export default {
     const searchInput = ref('');
     const main = ref(null);
     const channels = ref([
-          {
-            title: 'general',
-            subreddit: 'videos',
-            minNumOfVotes: 100,
-            // youtubeChannels: 'UCsvn_Po0SmunchJYOWpOxMg;UCzQUP1qoWDoEbmsQxvdjxgQ',
-          },
-          {
-            title: 'curious',
-            subreddit: 'curiousvideos;mealtimevideos;educativevideos;watchandlearn',
-            minNumOfVotes: 3,
-            youtubeChannels:
-              'UCzQUP1qoWDoEbmsQxvdjxgQ;UCDsElQQt_gCZ9LgnW-7v-cQ;UCX6b17PVsYBQ0ip5gyeme-Q;UCmmPgObSUPw1HL2lq6H4ffA;UC7IcJI8PUf5Z3zKxnZvTBog;UCZYTClx2T1of7BRZ86-8fow;UC9uD-W5zQHQuAVT2GdcLCvg',
-          },
-          {
-            title: 'science',
-            subreddit: 'biology;psychology;lectures;space;philosophy;physics;math',
-            minNumOfVotes: 3,
-          },
-          {
-            title: 'documentaries',
-            subreddit: 'documentaries',
-            minNumOfVotes: 10,
-          },
+      {
+        title: 'general',
+        subreddit: 'videos',
+        minNumOfVotes: 100,
+        // youtubeChannels: 'UCsvn_Po0SmunchJYOWpOxMg;UCzQUP1qoWDoEbmsQxvdjxgQ',
+      },
+      {
+        title: 'curious',
+        subreddit: 'curiousvideos;mealtimevideos;educativevideos;watchandlearn',
+        minNumOfVotes: 3,
+        youtubeChannels:
+          'UCzQUP1qoWDoEbmsQxvdjxgQ;UCDsElQQt_gCZ9LgnW-7v-cQ;UCX6b17PVsYBQ0ip5gyeme-Q;UCmmPgObSUPw1HL2lq6H4ffA;UC7IcJI8PUf5Z3zKxnZvTBog;UCZYTClx2T1of7BRZ86-8fow;UC9uD-W5zQHQuAVT2GdcLCvg',
+      },
+      {
+        title: 'science',
+        subreddit: 'biology;psychology;lectures;space;philosophy;physics;math',
+        minNumOfVotes: 3,
+      },
+      {
+        title: 'documentaries',
+        subreddit: 'documentaries',
+        minNumOfVotes: 10,
+      },
+    ]);
 
-        ]);
-
-
-     // eslint-disable-next-line no-unused-vars
-    var paths = window.location.pathname.split('/').filter(a => a);
+    // eslint-disable-next-line no-unused-vars
+    var paths = window.location.pathname.split('/').filter((a) => a);
     //const channel = ref(paths.length === 1 && paths[0])
-    const channel = ref('general')
+    const channel = ref('general');
     function RedditVideoService() {
       function isVideoObject(obj) {
         var data = obj.data;
@@ -122,7 +129,7 @@ export default {
           sortOrder = -1;
           property = property.substr(1);
         }
-        return function(a, b) {
+        return function (a, b) {
           const result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
           return result * sortOrder;
         };
@@ -138,20 +145,20 @@ export default {
           if (after) query = query.after(after);
 
           query.fetch(
-            res => {
+            (res) => {
               if (res.error) return reject(res);
               let videos = res.data.children.filter(isVideoObject);
 
               if (upsMin) {
-                videos = videos.filter(vid => filterByUpvotes(vid, upsMin));
+                videos = videos.filter((vid) => filterByUpvotes(vid, upsMin));
               }
 
-              videos = videos.map(childObjectToDomainVideoModel).filter(v => v.type === 'youtube');
+              videos = videos.map(childObjectToDomainVideoModel).filter((v) => v.type === 'youtube');
 
               result(videos);
             },
             // err contains the error from Reddit
-            err => reject(err)
+            (err) => reject(err)
           );
         });
       }
@@ -166,7 +173,7 @@ export default {
       async function loadHot(channel_s, upsMin) {
         const channel_arr = channel_s.split(';');
         // console.warn("fetching", channel_s.length, "channels");
-        const promises = channel_arr.map(channel => _loadHot(channel, upsMin));
+        const promises = channel_arr.map((channel) => _loadHot(channel, upsMin));
 
         const arrayOfArrayOfVideos = await Promise.all(promises);
 
@@ -174,7 +181,7 @@ export default {
 
         const uniq = {};
         // remove duplicate videos
-        videos = videos.filter(arr => !uniq[arr.videoUrl] && (uniq[arr.videoUrl] = true));
+        videos = videos.filter((arr) => !uniq[arr.videoUrl] && (uniq[arr.videoUrl] = true));
 
         return [].concat.apply([], videos);
         // .sort(dynamicSort("created_utc"));
@@ -188,17 +195,20 @@ export default {
 
     const mixElementsFromArraysOfArrays = function (arrayOfArrays) {
       // find the smallest amount of videos for every channel
-      const leastAmountOfVids = Math.min.apply(null, arrayOfArrays.map(arr => arr.length).filter(arr => arr));
+      const leastAmountOfVids = Math.min.apply(
+        null,
+        arrayOfArrays.map((arr) => arr.length).filter((arr) => arr)
+      );
 
       if (arrayOfArrays.length === 1) {
         return arrayOfArrays;
       }
 
-      if (arrayOfArrays.filter(arr => arr.length > 0).length === 0) {
+      if (arrayOfArrays.filter((arr) => arr.length > 0).length === 0) {
         return [];
       }
 
-      arrayOfArrays = arrayOfArrays.filter(a => a.length);
+      arrayOfArrays = arrayOfArrays.filter((a) => a.length);
       let videos = [];
       // get one video of each channel in rotation
       for (let i = 0; i < leastAmountOfVids; i++) {
@@ -214,7 +224,7 @@ export default {
       }
 
       return videos;
-    }
+    };
 
     // eslint-disable-next-line no-unused-vars
     const redditService = ref(RedditVideoService());
@@ -233,7 +243,7 @@ export default {
       }
       async function loadChannels(channel_s) {
         channel_s = channel_s.split(';');
-        const searches = channel_s.map(channel => getYouTubeChannelSearch(channel));
+        const searches = channel_s.map((channel) => getYouTubeChannelSearch(channel));
         const arrayOfArrayOfVideos = await Promise.all(searches);
 
         const videos = mixElementsFromArraysOfArrays(arrayOfArrayOfVideos);
@@ -253,7 +263,7 @@ export default {
       }
       function formatResults(results) {
         if (!results.items) return null;
-        return results.items.map(res => ({
+        return results.items.map((res) => ({
           id: res.id.videoId, // reddit id
           permalink: 'https://www.youtube.com/watch?v=' + res.id.videoId,
           title: res.snippet.title,
@@ -272,31 +282,43 @@ export default {
     // eslint-disable-next-line no-unused-vars
     const youtubeService = ref(YouTubeService());
 
-    const onChange = function(value) {
-        if (value) main.value.search(value);
-      }
+    const onChange = function (value) {
+      if (value) main.value.search(value);
+    };
 
-    const setChannel = function(v) {
+    const setChannel = function (v) {
       channel.value = v;
-    }
+    };
 
-    const setSearchInput = function(v) {
+    const setSearchInput = function (v) {
       searchInput.value = v;
-    }
+    };
 
     // eslint-disable-next-line no-unused-vars
-    const changeChannel = function(v) {
+    const changeChannel = function (v) {
       main.value.changeChannel(v);
-    }
+    };
 
     var tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    return {changeChannel, main, setSearchInput, setChannel, redditService, youtubeService, mixElementsFromArraysOfArrays, searchInput, onChange, channel, channels}
+    return {
+      changeChannel,
+      main,
+      setSearchInput,
+      setChannel,
+      redditService,
+      youtubeService,
+      mixElementsFromArraysOfArrays,
+      searchInput,
+      onChange,
+      channel,
+      channels,
+    };
 
-/*
+    /*
     Vue.config.unsafeDelimiters = ['{!!', '!!}'];
     Vue.config.debug = false;
     Vue.component('v-select', VueSelect.VueSelect);
@@ -324,6 +346,6 @@ export default {
 
     */
   },
-}
+};
 </script>
 
