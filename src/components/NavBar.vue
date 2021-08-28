@@ -16,7 +16,7 @@
             <span class="sr-only">Toggle navigation</span>
             <span>{{ channel }}</span>
           </button>
-          <div class="collapse navbar-collapse" id="navbar-collapse-1">
+          <div id="navbar-collapse-1" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
               <li v-for="item in channels" :key="item.id" :class="{ active: item.title == channel }">
                 <a @click="changeChannel(item.title)"> {{ item.title }} </a>
@@ -35,15 +35,15 @@
             <div class="form-group">
               <span class="glyphicon glyphicon-search form-control-feedback"></span>
               <vue-select
+                v-model="searchInput"
                 search-placeholder="search"
                 label="title"
-                @search:input="onChange"
-                @selected="onSearch"
                 :options="options"
-                v-model="searchInput"
                 searchable
                 clear-on-select
                 clear-on-close
+                @search:input="onChange"
+                @selected="onSearch"
               >
               </vue-select>
               <!--<template slot="option" slot-scope="option">

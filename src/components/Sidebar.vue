@@ -1,10 +1,10 @@
 <template>
   <div v-show="!mobile" class="sidebar hidden-sm hidden-xs">
-    <ul class="video-list list-unstyled pre-scrollable" id="toolbox">
-      <li class="video" v-for="(video, index) in videoList" :key="video.id" data-video-id="{{ index }}" v-cloak>
-        <a @click="play(index)" :class="{ active: videoPlaying == index }">
+    <ul id="toolbox" class="video-list list-unstyled pre-scrollable">
+      <li v-for="(video, index) in videoList" v-cloak :key="video.id" class="video" data-video-id="{{ index }}">
+        <a :class="{ active: videoPlaying == index }" @click="play(index)">
           <div class="video-thumbnail-image hidden-xs">
-            <span class="video-watched" v-show="hasBeenWatched(video.youtubeId)">WATCHED</span>
+            <span v-show="hasBeenWatched(video.youtubeId)" class="video-watched">WATCHED</span>
             <img class="video-image" :src="toUrl(video.youtubeId)" alt="{!! video.title !!}" />
           </div>
           <div class="video-title" :title="video.title" :class="{ watched: hasBeenWatched(video.youtubeId) }">

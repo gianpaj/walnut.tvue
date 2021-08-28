@@ -4,8 +4,8 @@
       alt="previous"
       title="previous"
       class="prev-video pull-left"
-      v-on:click="prevVideo()"
       viewBox="0 0 292.362 292.362"
+      @click="prevVideo()"
     >
       <!-- :class="{ disabled: videoPlaying < videoList.length }" -->
       <g>
@@ -16,7 +16,7 @@
         />
       </g>
     </svg>
-    <svg alt="next" title="next" class="next-video pull-right" v-on:click="nextVideo()" viewBox="0 0 292.362 292.362">
+    <svg alt="next" title="next" class="next-video pull-right" viewBox="0 0 292.362 292.362" @click="nextVideo()">
       <!-- :class="{ disabled: videoPlaying >= videoList.length - 1 }" -->
       <g>
         <path

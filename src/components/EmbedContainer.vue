@@ -2,14 +2,14 @@
   <div class="embed-container" @click="test">
     <div class="videoPlayer">
       <YouTube
+        ref="player"
         :src="link"
         :width="width"
         :height="height"
+        :vars="playerVars"
         @ready="onPlayerReady"
         @state-chage="onPlayerStateChange"
         @error="onPlayerError"
-        :vars="playerVars"
-        ref="player"
       />
     </div>
   </div>
@@ -20,8 +20,8 @@ import { ref, onMounted, computed } from 'vue';
 import YouTube from 'vue3-youtube';
 
 export default {
-  props: ['video-list', 'autoplay', 'index', 'video-message', 'playing-video'],
   components: { YouTube },
+  props: ['video-list', 'autoplay', 'index', 'video-message', 'playing-video'],
   emits: ['next', 'play'],
   setup(props, context) {
     //Data

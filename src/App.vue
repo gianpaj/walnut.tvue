@@ -1,15 +1,15 @@
 <template>
-  <NavBar @change-channel="changeChannel" :channel="channel" :channels="channels" @change="onChange" />
+  <NavBar :channel="channel" :channels="channels" @change-channel="changeChannel" @change="onChange" />
   <Main
     ref="main"
-    @set-search-input="setSearchInput"
-    @set-channel="setChannel"
     :channel="channel"
     :channels="channels"
     :search-input="searchInput"
     :reddit-service="redditService"
     :youtube-service="youtubeService"
     :mixed="mixElementsFromArraysOfArrays"
+    @set-search-input="setSearchInput"
+    @set-channel="setChannel"
   />
   <!--<router-view/>-->
 </template>

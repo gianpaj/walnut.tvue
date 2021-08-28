@@ -2,24 +2,24 @@
   <div v-if="!loadingVideos">
     <div class="container">
       <SideBar
-        @play="play"
         :video-playing="videoPlaying"
         :mobile="mobile"
         :video-list="videoList"
         :videos-watched="videosWatched"
+        @play="play"
       />
 
       <div class="main-content">
         <div id="video-container" class="video-container pre-scrollable">
           <EmbedContainer
-            @play="play"
-            :playing-video="playingVideo"
-            @next="nextVideo"
-            :video-message="videoMessage"
             ref="youtube"
+            :playing-video="playingVideo"
+            :video-message="videoMessage"
             :video-list="videoList"
             :autoplay="autoplay"
             :index="indexToPlay"
+            @play="play"
+            @next="nextVideo"
           />
           <Details :playing-video="playingVideo" :channel="channel" />
           <div class="terms-container">
@@ -31,8 +31,8 @@
               alt="previous"
               title="previous"
               class="prev-video pull-left"
-              v-on:click="prevVideo()"
               viewBox="0 0 292.362 292.362"
+              @click="prevVideo()"
             >
               <!-- :class="{ disabled: videoPlaying < videoList.length }" -->
               <g>
@@ -47,8 +47,8 @@
               alt="next"
               title="next"
               class="next-video pull-right"
-              v-on:click="nextVideo()"
               viewBox="0 0 292.362 292.362"
+              @click="nextVideo()"
             >
               <!-- :class="{ disabled: videoPlaying >= videoList.length - 1 }" -->
               <g>
@@ -65,7 +65,7 @@
     </div>
   </div>
   <div v-else>
-    <div class="container" v-cloak>
+    <div v-cloak class="container">
       <h2 class="loadingMessage">
         Loading Videos <img src="../assets/spin.svg" class="loading" alt="Loading Videos" />
       </h2>
@@ -84,8 +84,8 @@ import SideBar from './Sidebar.vue';
 export default {
   name: 'Main',
   components: { EmbedContainer, Details, SideBar },
-  emits: ['set-channel', 'set-search-input'],
   props: ['youtube-service', 'reddit-service', 'mixed', 'search-input', 'channel', 'channels'],
+  emits: ['set-channel', 'set-search-input'],
 
   setup(props, context) {
     var loadingVideosMessage = 'Loading Videos <img src="/img/spin.svg" class="loading" alt="Loading Videos">';
