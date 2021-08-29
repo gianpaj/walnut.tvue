@@ -11,6 +11,7 @@
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "eslint-config-prettier": "^8.3.0",
+    "get-youtube-id": "^1.0.1",
     "reddit.js": "^0.1.4",
     "vue": "^3.1.1",
     "vue-ga": "^1.1.0",
@@ -29,9 +30,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
     "jquery": "^3.6.0",
-    "react-ga": "^3.3.0",
-    "vue-youtube": "^1.4.0",
-    "vue3-youtube": "^0.1.6"
+    "react-ga": "^3.3.0"
   },
   "eslintConfig": {
     "root": true,

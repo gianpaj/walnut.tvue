@@ -4,8 +4,7 @@
   <div class="embed-container" @click="test">
     <YouTube
       ref="player"
-      :width="width"
-      :height="height"
+      width="auto"
       :src="link"
       :vars="playerVars"
       @ready="onPlayerReady"
@@ -18,7 +17,8 @@
 <script>
 /* eslint-disable vue/prop-name-casing */
 import { ref, computed } from 'vue';
-import YouTube from 'vue3-youtube';
+import YouTube from './YouTube';
+// import YouTube from 'vue3-youtube';
 
 export default {
   components: { YouTube },
@@ -47,8 +47,7 @@ export default {
   emits: ['next', 'play'],
   setup(props, context) {
     // using `toRefs` to create a Reactive Reference to props
-    const height = ref('390');
-    const width = ref('640');
+    const width = ref('100%');
     const player = ref();
     const link = computed(
       () => props.playingVideo && `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`
@@ -91,7 +90,7 @@ export default {
     // eslint-disable-next-line no-undef
     return {
       width,
-      height,
+      // height,
       player,
       onPlayerReady,
       onPlayerError,
