@@ -119,10 +119,6 @@ a:hover {
   border-left: 4px solid transparent;
 }
 
-.v-select > .dropdown-menu a {
-  color: white;
-}
-
 .navbar-inverse .navbar-nav > li > a {
   color: var(--gray2);
   font-weight: 600;
@@ -513,54 +509,6 @@ details .up-vote-num {
 @media screen and (min-width: 992px) {
   .navbar-brand {
     display: flex;
-  }
-}
-
-.v-select {
-  height: 35px;
-}
-
-.v-select > .dropdown-menu {
-  padding: 0;
-  background-color: black;
-}
-
-.v-select.open > .dropdown-menu .divider {
-  display: none;
-}
-
-.v-select > .dropdown-menu::-webkit-scrollbar {
-  width: 0;
-}
-
-.v-select > .dropdown-menu > li.highlight {
-  background-color: var(--gray-2);
-}
-
-.v-select .selected-tag {
-  background-color: transparent !important;
-  border: 0 !important;
-  color: white !important;
-  overflow: hidden;
-  padding-left: 34px !important;
-  position: absolute;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.v-select .dropdown-toggle {
-  border: 0 !important;
-}
-
-.v-select .open-indicator {
-  display: none !important;
-}
-
-@media screen and (max-width: 992px) {
-  .v-select input[type='search'] {
-    min-width: 90px;
-    max-width: 140px !important;
   }
 }
 
