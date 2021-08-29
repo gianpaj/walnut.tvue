@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import './assets/all.css';
-import 'vue-next-select/dist/index.css';
-import NavBar from './components/NavBar.vue';
-import Main from './components/Main.vue';
 import { ref } from 'vue';
 import searchYoutube from 'youtube-api-v3-search';
+
+import './assets/all.css';
+import Main from './components/Main.vue';
+import NavBar from './components/NavBar.vue';
 
 export default {
   name: 'App',

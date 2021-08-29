@@ -15,7 +15,6 @@
     "reddit.js": "^0.1.4",
     "vue": "^3.1.1",
     "vue-ga": "^1.1.0",
-    "vue-next-select": "^2.6.0",
     "vue-router": "^4.0.0-0",
     "vue-select": "^3.11.2",
     "youtube-api-v3-search": "^1.2.1"

@@ -1,10 +1,10 @@
 <template>
-  <div :style="wrapperStyle"></div>
   <div ref="youtube" :style="iframeStyle"></div>
 </template>
 
 <script>
 /* eslint-disable vue/require-default-prop */
+/* global YT */
 import { defineComponent } from 'vue';
 import getYouTubeID from 'get-youtube-id';
 export default defineComponent({
@@ -50,13 +50,6 @@ export default defineComponent({
     id() {
       return getYouTubeID(this.src) || this.src;
     },
-    wrapperStyle() {
-      return {
-        width: `${this.width == 'auto' ? this.width : `${this.width}px`}`,
-        height: `${this.height == 'auto' ? this.height : `${this.height}px`}`,
-        position: 'relative',
-      };
-    },
   },
   watch: {
     width() {
@@ -77,7 +70,6 @@ export default defineComponent({
     }
     if (!window.onYouTubeIframeAPIReady) {
       window.onYouTubeIframeAPIReady = () => {
-        // eslint-disable-next-line no-unused-expressions
         window.onYouTubeIframeAPIReadyResolvers?.forEach((resolver) => {
           resolver();
         });
@@ -87,7 +79,6 @@ export default defineComponent({
     const id = 'youtube-iframe-js-api-script';
     let tag = document.getElementById(id);
     if (!tag) {
-      // eslint-disable-next-line no-unused-expressions
       window.onYouTubeIframeAPIReadyResolvers?.push(this.resolver);
       tag = document.createElement('script');
       tag.id = id;
@@ -106,7 +97,6 @@ export default defineComponent({
   methods: {
     initPlayer() {
       this.initiated = true;
-      // eslint-disable-next-line no-undef
       this.player = new YT.Player(this.$refs.youtube, {
         // height: this.height,
         // width: this.width,
@@ -312,7 +302,6 @@ export default defineComponent({
      * @returns Current player state.
      */
     getPlayerState() {
-      // eslint-disable-next-line no-undef
       return this.player ? this.player.getPlayerState() : YT.PlayerState.UNSTARTED;
     },
     /**
