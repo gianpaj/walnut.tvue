@@ -15,7 +15,6 @@
 </template>
 
 <script>
-/* eslint-disable vue/prop-name-casing */
 import { ref, computed } from 'vue';
 import YouTube from './YouTube';
 // import YouTube from 'vue3-youtube';

@@ -17,7 +17,6 @@
 </template>
 
 <script>
-/* eslint-disable vue/prop-name-casing */
 import jQuery from 'jquery';
 
 export default {
