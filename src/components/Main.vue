@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { ref, onBeforeUnmount } from 'vue';
+import { ref, onBeforeUnmount, onMounted } from 'vue';
 import $ from 'jquery';
 import ga from 'vue-ga';
 import EmbedContainer from './EmbedContainer.vue';
@@ -88,9 +88,9 @@ export default {
   emits: ['set-channel', 'set-search-input'],
 
   setup(props, context) {
-    var loadingVideosMessage = 'Loading Videos <img src="/img/spin.svg" class="loading" alt="Loading Videos">';
+    const loadingVideosMessage = 'Loading Videos <img src="/img/spin.svg" class="loading" alt="Loading Videos">';
 
-    //data
+    // data
     const autoplay = ref(true);
     const contentType = ref(''); // 'youtube' or 'reddit'
     const loadingVideos = ref(true);
@@ -102,36 +102,33 @@ export default {
     const videosWatched = ref([]);
     const voted = ref(0);
     const youtube = ref(null);
-
-    // eslint-disable-next-line no-unused-vars
     const indexToPlay = ref(0);
+    const player = ref();
 
-    const play = function (i, player) {
-      console.log('play', i, player);
+    onMounted(() => {
+      fetchAllVideos();
+    });
+
+    const play = function (i, pl = player.value) {
       playingVideo.value = videoList.value[i];
       videoPlaying.value = i;
+      player.value = pl;
       voted.value = 0;
       watched(playingVideo.value.youtubeId);
-      playVideo(playingVideo.value, player);
+      playVideo(playingVideo.value);
       if (!props.channel) return;
       if (playingVideo.value.permalink.includes('reddit.com')) {
         window.history.replaceState(null, null, '/' + props.channel + '/' + playingVideo.value.id);
       }
     };
-    // eslint-disable-next-line no-unused-vars
-    const getSubReddits = function (channel) {
-      return props.channels.find((c) => c.title == channel).subreddit;
-    };
-    // eslint-disable-next-line no-unused-vars
-    const getYouTubeChannels = function (channel) {
-      return props.channels.find((c) => c.title == channel).youtubeChannels;
-    };
-    // eslint-disable-next-line no-unused-vars
-    const getChannelMinVotes = function (channel) {
-      props.channels.find((c) => c.title == channel).minNumOfVotes;
-    };
-    // eslint-disable-next-line no-unused-vars
-    const fetchAllVideos = function (channel, searchText) {
+
+    const getSubReddits = (channel) => props.channels.find((c) => c.title == channel).subreddit;
+
+    const getYouTubeChannels = (channel) => props.channels.find((c) => c.title == channel).youtubeChannels;
+
+    const getChannelMinVotes = (channel) => props.channels.find((c) => c.title == channel).minNumOfVotes;
+
+    const fetchAllVideos = function ({ channel, searchText } = {}) {
       if (!channel) {
         channel = 'general';
       }
@@ -163,7 +160,7 @@ export default {
         promises = Promise.all([props.redditService.loadHot(subreddits, minNumOfVotes)]);
       }
       getStorage();
-      promises
+      return promises
         .then((resolvers) => {
           const [redditVideos, youtubeVideos = []] = resolvers;
           if (redditVideos.length < 1 && youtubeVideos.length < 1) {
@@ -198,7 +195,7 @@ export default {
           console.log(error);
         });
     };
-    // eslint-disable-next-line no-unused-vars
+
     const fetchVideosFromYoutube = function (query) {
       this.contentType = 'youtube';
       // eslint-disable-next-line no-undef
@@ -225,12 +222,12 @@ export default {
      * When the input field is being typed
      * @param {string} value
      */
-    // eslint-disable-next-line no-unused-vars
 
     // eslint-disable-next-line no-unused-vars
     const onSubmit = function (event) {
       event.preventDefault();
     };
+
     // eslint-disable-next-line no-unused-vars
     const search = function (value, player) {
       // this.$emit('input', event);
@@ -249,12 +246,10 @@ export default {
         value = value.split(' (')[0];
         window.history.replaceState(null, null, '/r/' + value);
         context.emit('set-channel', value);
-        fetchAllVideos(value);
+        fetchAllVideos({ channel: value });
       } else fetchAllVideos();
     };
-    // eslint-disable-next-line no-unused-vars
 
-    // eslint-disable-next-line no-unused-vars
     const watched = function (i) {
       // eslint-disable-next-line vue/no-ref-as-operand
       if (-1 == videosWatched.value.indexOf(i)) {
@@ -263,6 +258,7 @@ export default {
         setStorage();
       }
     };
+
     // eslint-disable-next-line no-unused-vars
     const vote = function (id, num) {
       voted.value = num;
@@ -274,20 +270,13 @@ export default {
       '37' == evt.keyCode ? prevVideo() : '39' == evt.keyCode && nextVideo();
     };
 
-    // eslint-disable-next-line no-unused-vars
-    const playVideo = function (t, player) {
-      console.log('playVideo', t.youtubeId);
-      // eslint-disable-next-line no-debugger
-      // debugger;
-      if (!player || !player.value || !player.value.refloadVideoById) {
-        console.log('not playing');
+    const playVideo = function (t) {
+      if (!player.value || !player.value.loadVideoById) {
         return;
       }
-      console.log('playing');
-      this.mobile ? player.value.cueVideoById(t.youtubeId) : player.value.loadVideoById(t.youtubeId);
+      mobile.value ? player.value.cueVideoById(t.youtubeId) : player.value.loadVideoById(t.youtubeId);
     };
 
-    // eslint-disable-next-line no-unused-vars
     const prevVideo = function () {
       if (videoPlaying.value < 1) return;
       videoPlaying.value--;
@@ -295,7 +284,6 @@ export default {
       scroll(-1);
     };
 
-    // eslint-disable-next-line no-unused-vars
     const nextVideo = function () {
       if (videoPlaying.value >= videoList.value.length - 1) {
         return;
@@ -305,20 +293,19 @@ export default {
       scroll(1);
     };
 
-    // eslint-disable-next-line no-unused-vars
     const scroll = function (num) {
       const e = $('#toolbox').scrollTop();
       const n = $('#toolbox .active').parent().height();
       $('#toolbox').scrollTop(e + num === 1 ? n + 1 : -(n + 1));
     };
-    // eslint-disable-next-line no-unused-vars
+
     const getStorage = function () {
       if (storageAvailable() && localStorage.getItem('videosWatched')) {
         const t = localStorage.getItem('videosWatched');
         videosWatched.value = JSON.parse(t);
       }
     };
-    // eslint-disable-next-line no-unused-vars
+
     const setStorage = function () {
       if (storageAvailable()) {
         const t = JSON.stringify(videosWatched.value);
@@ -337,25 +324,24 @@ export default {
         return false;
       }
     };
-    // eslint-disable-next-line no-unused-vars
+
     const changeChannel = function (channel) {
       context.emit('set-search-input', '');
       if (props.channel !== channel) {
         youtube.value.player.stopVideo();
         context.emit('set-channel', channel);
         window.history.replaceState(null, null, '/' + channel);
-        fetchAllVideos(channel);
+        fetchAllVideos({ channel });
       }
       //$('#navbar-collapse-1').collapse('hide');
     };
 
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) mobile.value = true;
     props.channel || context.emit('set-channel', 'general');
-    fetchAllVideos();
     window.addEventListener('keyup', keys);
 
     onBeforeUnmount(() => {
-      window.removeEventListener('keyup', keys);
+      window && window.removeEventListener('keyup', keys);
     });
 
     return {

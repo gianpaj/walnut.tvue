@@ -1,17 +1,17 @@
 <template>
+  <!-- FIXME: hack -->
+  <div class="hidden"><YouTube ref="yt" src="" /></div>
   <div class="embed-container" @click="test">
-    <div class="videoPlayer">
-      <YouTube
-        ref="player"
-        :src="link"
-        :width="width"
-        :height="height"
-        :vars="playerVars"
-        @ready="onPlayerReady"
-        @state-chage="onPlayerStateChange"
-        @error="onPlayerError"
-      />
-    </div>
+    <YouTube
+      ref="player"
+      :width="width"
+      :height="height"
+      :src="link"
+      :vars="playerVars"
+      @ready="onPlayerReady"
+      @state-chage="onPlayerStateChange"
+      @error="onPlayerError"
+    />
   </div>
 </template>
 
@@ -46,42 +46,28 @@ export default {
   },
   emits: ['next', 'play'],
   setup(props, context) {
+    // using `toRefs` to create a Reactive Reference to props
     const height = ref('390');
     const width = ref('640');
     const player = ref();
-    // const videoId = ref(youtubeId);
-    //const link = ref(null);
-    const link = computed(() => `https://www.youtube.com/watch?v=${props.playingVideo.value?.youtubeId}`);
+    const link = computed(
+      () => props.playingVideo && `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`
+    );
 
     const test = function () {};
 
     // eslint-disable-next-line no-unused-vars
-    const videoId = ref(props.playingVideo.value?.youtubeId);
-    // eslint-disable-next-line no-unused-vars
-    const events = ref({
-      onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange,
-      onError: onPlayerError,
-    });
-    // eslint-disable-next-line no-unused-vars
     const playerVars = ref({
-      // autoplay: 1,
       controls: 1,
       showinfo: 0,
       rel: 0,
       // video annotations
       iv_load_policy: 3,
-      // origin: 'http://localhost:3000',
+      origin: 'http://localhost:3000',
       // origin: 'https://walnut.tv',
     });
 
-    //Methods
-    // eslint-disable-next-line no-unused-vars
-    const play = (i) => {
-      console.log('e play', i, player);
-      // eslint-disable-next-line no-undef
-      context.emit('play', i, player);
-    };
+    // Methods
     const nextVideo = function () {
       //watchEffect(() => {
       // eslint-disable-next-line no-undef
@@ -90,20 +76,15 @@ export default {
     };
 
     function onPlayerReady() {
-      console.log(props.playingVideo.value);
       // if we're playing a specific video (e.g. /general/b97ih5)
-      props.videoList[props.index] && play(props.index, player.value);
-      // console.log('onready', props.index, player);
-      // console.log('onready', props.index, this.$refs.player);
-
-      return true;
+      props.videoList[props.index] && context.emit('play', props.index, player.value);
     }
     function onPlayerError() {
       console.log('onPlayerError');
       nextVideo();
     }
     function onPlayerStateChange(t) {
-      console.log('onPlayerStateChange');
+      console.log('onPlayerStateChange', t);
       0 === t.data && props.autoplay && nextVideo();
     }
 
@@ -117,14 +98,8 @@ export default {
       onPlayerStateChange,
       link,
       test,
-      play,
       playerVars,
     };
-  },
-
-  mounted() {
-    this.onPlayerReady();
-    //link.value = `https://www.youtube.com/watch?v=${props.playingVideo.youtubeId}`;
   },
 };
 </script>
